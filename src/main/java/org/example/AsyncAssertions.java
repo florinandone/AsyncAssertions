@@ -1,7 +1,8 @@
 package org.example;
 
-import java.util.function.Supplier;
 import java.util.concurrent.TimeoutException;
+import java.util.function.LongSupplier;
+import java.util.function.Supplier;
 
 /**
  * AsyncAssertions is similar to org.junit.jupiter.api.Assertions,
@@ -46,12 +47,12 @@ public class AsyncAssertions {
      * @param waitTimeSec  The maximum time to wait for the values to become equal (in seconds).
      * @throws TimeoutException If the values are not equal within the specified timeout.
      */
-    public static void waitForEqual(long expected, long actual, String message, long waitTimeSec) throws TimeoutException {
+    public static void waitForEqual(long expected, LongSupplier actual, String message, long waitTimeSec) throws TimeoutException {
         long startTime = System.currentTimeMillis();
         long endTime = startTime + (waitTimeSec * 1000);
 
         while (System.currentTimeMillis() < endTime) {
-            if (expected == actual) {
+            if (expected == actual.getAsLong()) {
                 return; // Values are equal
             }
             try {

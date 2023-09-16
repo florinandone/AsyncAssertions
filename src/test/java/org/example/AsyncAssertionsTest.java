@@ -29,7 +29,7 @@ public class AsyncAssertionsTest {
         long expected = 42;
         long actual = 42;
 
-        assertDoesNotThrow(() -> waitForEqual(expected, actual, "Values are equal", 5));
+        assertDoesNotThrow(() -> waitForEqual(expected, ()->actual, "Values are equal", 5));
 
         // Test unequal values that become equal within the timeout
         long expected2 = 10;
@@ -38,17 +38,17 @@ public class AsyncAssertionsTest {
         assertDoesNotThrow(() -> {
             Thread t = new Thread(() -> {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(200);
                     actual2.set(10); // Update the value in the array
                 } catch (InterruptedException ignored) {
                     Thread.currentThread().interrupt();
                 }
             });
             t.start();
-            waitForEqual(expected2, actual2.get(), "Values become equal", 5);
+            waitForEqual(expected2, actual2::get, "Values become equal", 5);
         });
 
         // Test values that never become equal within the timeout
-        assertThrows(TimeoutException.class, () -> waitForEqual(5, 10, "Values never become equal", 2));
+        assertThrows(TimeoutException.class, () -> waitForEqual(5, ()->10, "Values never become equal", 2));
     }
 }
