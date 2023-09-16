@@ -29,7 +29,7 @@ public class AsyncAssertions {
                 return; // Condition is met
             }
             try {
-                Thread.sleep(100);
+               sleep100();
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt();
             }
@@ -56,12 +56,16 @@ public class AsyncAssertions {
                 return; // Values are equal
             }
             try {
-                Thread.sleep(100);
+                sleep100();
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt();
             }
         }
 
         throw new TimeoutException(message + " (Expected: " + expected + ", Actual: " + actual + ")");
+    }
+
+    private static void sleep100() throws InterruptedException {
+        Thread.sleep(100);
     }
 }
